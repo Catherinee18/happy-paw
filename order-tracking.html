@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Order Tracking - Pawfect Pet Supplies</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>Pawfect Pet Supplies</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="product.html">Products</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="order-tracking.html" class="active">Track Order</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="order-tracking container">
+      <h2>Track Your Order</h2>
+      <form id="tracking-form">
+        <label for="order-number">Enter Order Number:</label>
+        <input type="text" id="order-number" required placeholder="e.g. ORD12345" />
+        <button type="submit" class="btn">Track</button>
+      </form>
+      <div id="tracking-result" style="margin-top:20px;"></div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 Pawfect Pet Supplies
+  </footer>
+
+  <script>
+    // Sample mock orders data
+    const ordersData = {
+      "ORD12345": { status: "Processing", estimatedDelivery: "2025-06-01" },
+      "ORD67890": { status: "Shipped", estimatedDelivery: "2025-05-30" },
+      "ORD11121": { status: "Delivered", estimatedDelivery: "2025-05-20" },
+    };
+
+    const form = document.getElementById('tracking-form');
+    const resultDiv = document.getElementById('tracking-result');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const orderNumber = document.getElementById('order-number').value.trim().toUpperCase();
+
+      if (!orderNumber) {
+        resultDiv.innerHTML = `<p style="color:red;">Please enter a valid order number.</p>`;
+        return;
+      }
+
+      if (ordersData[orderNumber]) {
+        const order = ordersData[orderNumber];
+        resultDiv.innerHTML = `
+          <p><strong>Order Number:</strong> ${orderNumber}</p>
+          <p><strong>Status:</strong> ${order.status}</p>
+          <p><strong>Estimated Delivery:</strong> ${order.estimatedDelivery}</p>
+        `;
+      } else {
+        resultDiv.innerHTML = `<p style="color:red;">Order not found. Please check your order number.</p>`;
+      }
+    });
+  </script>
+
+</body>
+</html>

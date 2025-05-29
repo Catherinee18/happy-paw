@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pawfect Pet Supplies - Shop</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Pawfect Pet Supplies</h1>
+  </header>
+
+  <main>
+    <h2>Our Products</h2>
+    <section class="product-grid container">
+      <div class="product-card" data-product-id="dog-food-01" data-category="food">
+        <img src="images/delicious-dog-food.jpg" alt="Delicious Dog Food" />
+        <h3 class="product-name">Delicious Dog Food</h3>
+        <p class="price">$25.99</p>
+        <button class="btn add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product-card" data-product-id="rubber-ball-01" data-category="toys">
+        <img src="images/fun-rubber-ball.jpg" alt="Fun Rubber Ball" />
+        <h3 class="product-name">Fun Rubber Ball</h3>
+        <p class="price">$9.99</p>
+        <button class="btn add-to-cart">Add to Cart</button>
+      </div>
+
+      <div class="product-card" data-product-id="cozy-bed-01" data-category="beds">
+        <img src="images/cozy-pet-bed.jpg" alt="Cozy Pet Bed" />
+        <h3 class="product-name">Cozy Pet Bed</h3>
+        <p class="price">$45.00</p>
+        <button class="btn add-to-cart">Add to Cart</button>
+      </div>
+    </section>
+
+    <!-- Cart UI Section -->
+    <section class="cart-container container">
+      <h2>Your Cart</h2>
+      <div id="cart-items"></div>
+      <h3>Total: $<span id="cart-total">0.00</span></h3>
+      <button id="checkout-btn" class="btn">Checkout</button>
+    </section>
+
+    <!-- Invoice Section -->
+    <section id="invoice-section" style="display:none;">
+      <h2>Invoice</h2>
+      <div id="invoice-details"></div>
+      <button id="print-invoice-btn" class="btn">Print Invoice</button>
+      <button id="close-invoice-btn" class="btn">Close</button>
+    </section>
+  </main>
+
+  <script>
+    // CART FUNCTIONS
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function addToCart(product) {
+      let cart = getCart();
+      let existing = cart.find(item => item.id === product.id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        product.qty = 1;
+        cart.push(product);
+      }
+      saveCart(cart);
+      alert(`${product.name} added to cart!`);
+      renderCartPage();
+    }
+
+    // RENDER CART PAGE
+    function renderCartPage() {
+      const cartItemsContainer = document.getElementById('cart-items');
+      const cartTotalEl = document.getElementById('cart-total');
+      if (!cartItemsContainer || !cartTotalEl) return;
+
+      const cart = getCart();
+      cartItemsContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p>Your cart is empty.</p>';
+        cartTotalEl.textContent = '0.00';
+        return;
+      }
+
+      let total = 0;
+      cart.forEach((item, index) => {
+        total += item.price * item.qty;
+
+        const div = document.createElement('div');
+        div.classList.add('cart-item');
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}" />
+          <strong>${item.name}</strong> - $${item.price.toFixed(2)}
+          <input type="number" min="1" value="${item.qty}" style="width:50px;" data-index="${index}" class="qty-input" />
+          <button data-index="${index}" class="remove-btn">Remove</button>
+        `;
+        cartItemsContainer.appendChild(div);
+      });
+
+      cartTotalEl.textContent = total.toFixed(2);
+
+      // Quantity change events
+      document.querySelectorAll('.qty-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+          const idx = e.target.dataset.index;
+          let qty = parseInt(e.target.value);
+          if (qty < 1) qty = 1;
+          const cart = getCart();
+          cart[idx].qty = qty;
+          saveCart(cart);
+          renderCartPage();
+        });
+      });
+
+      // Remove item events
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const idx = e.target.dataset.index;
+          let cart = getCart();
+          cart.splice(idx, 1);
+          saveCart(cart);
+          renderCartPage();
+        });
+      });
+    }
+
+    // INVOICE SECTION ELEMENTS
+    const invoiceSection = document.getElementById('invoice-section');
+    const invoiceDetails = document.getElementById('invoice-details');
+    const printInvoiceBtn = document.getElementById('print-invoice-btn');
+    const closeInvoiceBtn = document.getElementById('close-invoice-btn');
+
+    // SHOW INVOICE FUNCTION
+    function showInvoice() {
+      const cart = getCart();
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+
+      let html = `<p><strong>Order Date:</strong> ${new Date().toLocaleString()}</p>`;
+      html += `<table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th style="text-align:right;">Qty</th>
+            <th style="text-align:right;">Price</th>
+            <th style="text-align:right;">Subtotal</th>
+          </tr>
+        </thead><tbody>`;
+
+      let total = 0;
+      cart.forEach(item => {
+        const subtotal = item.price * item.qty;
+        total += subtotal;
+        html += `
+          <tr>
+            <td>${item.name}</td>
+            <td style="text-align:right;">${item.qty}</td>
+            <td style="text-align:right;">$${item.price.toFixed(2)}</td>
+            <td style="text-align:right;">$${subtotal.toFixed(2)}</td>
+          </tr>`;
+      });
+
+      html += `
+        <tr>
+          <td colspan="3" style="text-align:right; font-weight:bold;">Total</td>
+          <td style="text-align:right; font-weight:bold;">$${total.toFixed(2)}</td>
+        </tr>
+      </tbody></table>`;
+
+      invoiceDetails.innerHTML = html;
+      invoiceSection.style.display = 'block';
+    }
+
+    printInvoiceBtn.addEventListener('click', () => {
+      window.print();
+    });
+
+    closeInvoiceBtn.addEventListener('click', () => {
+      invoiceSection.style.display = 'none';
+    });
+
+    // CHECKOUT SIMULATION
+    function checkout() {
+      const cart = getCart();
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      alert('Processing payment...');
+      setTimeout(() => {
+        alert('Payment successful! Thank you for your purchase.');
+        showInvoice();
+        localStorage.removeItem('cart');
+        renderCartPage();
+      }, 1500);
+    }
+
+    // ADD TO CART BUTTONS
+    document.querySelectorAll('.btn.add-to-cart').forEach(button => {
+      button.addEventListener('click', () => {
+        const card = button.closest('.product-card');
+        const product = {
+          id: card.dataset.productId,
+          name: card.querySelector('.product-name').textContent.trim(),
+          price: parseFloat(card.querySelector('.price').textContent.replace('$', '')),
+          image: card.querySelector('img').src
+        };
+        addToCart(product);
+      });
+    });
+
+    // CHECKOUT BUTTON
+    document.getElementById('checkout-btn').addEventListener('click', checkout);
+
+    // INITIAL RENDER CART
+    renderCartPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://127.0.0.1:5500/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="emotion-insertion-point" content="">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet's Apparel</title>
+  <link rel="stylesheet" href="./Pet&#39;s Apparel_files/style.css">
+  <link href="./Pet&#39;s Apparel_files/css2" rel="stylesheet">
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <span>Working Hours: 08 AM - 06 PM</span>
+    <span>Email: happyPaw@email.com | Phone: +1 (234) 567 89 00</span>
+  </div>
+
+  <!-- Header and Navigation -->
+  <header>
+    <h1>Pet's Apparel</h1>
+    <nav>
+      <a href="http://127.0.0.1:5500/about.html">About Us</a>
+      <a href="http://127.0.0.1:5500/categories.html">Categories</a>
+      <a href="http://127.0.0.1:5500/our-shop.html">Our Shop</a>
+      <a href="http://127.0.0.1:5500/contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h2>Everything Your Pet Needs</h2>
+      <p>Pet supplies, food, and products from the best manufacturers.</p>
+      <div class="hero-buttons">
+        <a href="http://127.0.0.1:5500/about.html">About Us</a>
+        <a href="http://127.0.0.1:5500/categories.html">Categories</a>
+        
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="./Pet&#39;s Apparel_files/welsh-corgi-2785074_1280.jpg" alt="Cute Dog with Toys">
+    </div>
+  </section>
+
+
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Happy Paw. All Rights Reserved.</p>
+  </footer>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+<div id="quick-start-container"></div></body></html>
